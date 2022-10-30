@@ -1,1 +1,3 @@
-./data
+data/
+*.out
+saved_model/preliminary_cifar10.pt

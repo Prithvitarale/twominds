@@ -11,10 +11,10 @@ def load_data():
     transform = transforms.Compose([transforms.ToTensor()]) # transforms.ConvertImageDtype(t.float)
     # train_data = datasets.FashionMNIST("./data", download=True, train=True, transform=transform)
     # test_data = datasets.FashionMNIST("./data", download=True, train=False, transform=transform)
-    train_data = datasets.CelebA("./data", download=True, split='train', transform=transform)
-    test_data = datasets.CelebA("./data", download=True, split='test', transform=transform)
-    # train_data = datasets.CIFAR10("./data", download=True, train=True, transform=transform)
-    # test_data = datasets.CIFAR10("./data", download=True, train=False, transform=transform)
+    # train_data = datasets.CelebA("./data", download=True, split='train', transform=transform)
+    # test_data = datasets.CelebA("./data", download=True, split='test', transform=transform)
+    train_data = datasets.CIFAR10("./data", download=True, train=True, transform=transform)
+    test_data = datasets.CIFAR10("./data", download=True, train=False, transform=transform)
     train_loader = DataLoader(train_data, batch_size=32, shuffle=True)
     test_loader = DataLoader(test_data, batch_size=32, shuffle=True)
     return train_loader, test_loader
@@ -22,10 +22,10 @@ def load_data():
 
 def train():
     model = c()
-    # loss_calc = nn.CrossEntropyLoss()
-    loss_calc = nn.BCEWithLogitsLoss()
-    optimizer = optim.SGD(model.parameters(), lr=5e-3, momentum=0.9)
-    epochs = 7
+    loss_calc = nn.CrossEntropyLoss()
+    # loss_calc = nn.BCEWithLogitsLoss()
+    optimizer = optim.SGD(model.parameters(), lr=7e-3, momentum=0.9)
+    epochs = 10
     train_loader, test_loader = load_data()
     dataiter = iter(test_loader)
 
@@ -38,7 +38,7 @@ def train():
             optimizer.zero_grad()
 
             y_hat = model(x)
-            loss = loss_calc(y_hat, y.float())
+            loss = loss_calc(y_hat, y)
             # print(loss.item())
             loss.backward()
             optimizer.step()
@@ -64,11 +64,12 @@ def train():
         y_hat = t.argmax(y_hat_pred, dim=1)
         running_loss += t.sum(t.eq(y_hat, y))
     print(f'Final Test Loss: {running_loss / (i * 32)}')
-    t.save(model, "./saved_models/preliminary6_faces.pt")
+    t.save(model, "./saved_models/preliminary_cifar10.pt")
 
-train()
-exit()
-model = t.load("./saved_models/preliminary6_faces.pt")
+# print("in")
+# train()
+# exit()
+model = t.load("./saved_models/preliminary_cifar10.pt")
 model.eval()
 
 
