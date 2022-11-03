@@ -22,11 +22,11 @@ class Classifier(nn.Module):
         self.dropout1 = nn.Dropout2d(0.25)
         self.dropout2 = nn.Dropout2d(0.5)
         self.fc1 = nn.Linear(36864, 1024)
-        self.fc1 = nn.Linear(2284800, 1024)
-        self.fc2 = nn.Linear(1024, 256)
-        self.fc3 = nn.Linear(256, 40)
+        # self.fc1 = nn.Linear(2284800, 1024)
         # self.fc2 = nn.Linear(1024, 256)
-        # self.fc3 = nn.Linear(256, 10)
+        # self.fc3 = nn.Linear(256, 40)
+        self.fc2 = nn.Linear(1024, 256)
+        self.fc3 = nn.Linear(256, 10)
 
     def forward(self, x):
         x = self.conv0(x)
