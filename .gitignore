@@ -1,1 +1,4 @@
-./data
+data/
+*.out
+saved_model/
+print.py

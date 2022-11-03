@@ -24,16 +24,17 @@ def train():
     model = c()
     # loss_calc = nn.CrossEntropyLoss()
     loss_calc = nn.BCEWithLogitsLoss()
-    optimizer = optim.SGD(model.parameters(), lr=5e-3, momentum=0.9)
-    epochs = 7
+    optimizer = optim.SGD(model.parameters(), lr=7e-3, momentum=0.9)
+    epochs = 10
     train_loader, test_loader = load_data()
     dataiter = iter(test_loader)
 
     running_loss = 0
     for epoch in range(epochs):
+        print(f"Epoch: {epoch}")
         for i, data in enumerate(train_loader, 0):
             x, y = data
-            # print(y[0])
+            print(y[0])
 
             optimizer.zero_grad()
 
@@ -44,6 +45,7 @@ def train():
             optimizer.step()
 
             running_loss += loss.item()
+            print(loss.item())
 
             if i % 200 == 199:
                 print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 200:.3f}')
@@ -64,11 +66,12 @@ def train():
         y_hat = t.argmax(y_hat_pred, dim=1)
         running_loss += t.sum(t.eq(y_hat, y))
     print(f'Final Test Loss: {running_loss / (i * 32)}')
-    t.save(model, "./saved_models/preliminary6_faces.pt")
+    t.save(model, "./saved_models/preliminary_faces.pt")
 
+print("prints to file")
 train()
 exit()
-model = t.load("./saved_models/preliminary6_faces.pt")
+model = t.load("./saved_models/preliminary_cifar10.pt")
 model.eval()
 
 
