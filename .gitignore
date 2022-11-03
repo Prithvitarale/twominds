@@ -1,4 +1,8 @@
 data/
 *.out
-saved_model/
+*.out#
+saved_models/
 print.py
+saved_models/preliminary_cifar10.pt
+job.txt
+__pycache__/main.cpython-38.pyc
