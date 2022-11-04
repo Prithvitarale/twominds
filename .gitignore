@@ -6,10 +6,9 @@ print.py
 saved_models/preliminary_cifar10.pt
 job.txt
 __pycache__/main.cpython-38.pyc
-beak.ong
+beak.png
 full.png
 process_cub.py
 CUB_200_2011/
-cub/cub-200-2011-part-visualizer/
 .idea/
 __pycache__/
