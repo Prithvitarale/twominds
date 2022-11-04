@@ -8,7 +8,7 @@ job.txt
 __pycache__/main.cpython-38.pyc
 beak.png
 full.png
-process_cub.py
 CUB_200_2011/
 .idea/
 __pycache__/
+cub/
