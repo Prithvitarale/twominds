@@ -2,5 +2,8 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/cub/cub-200-2011-part-visualizer" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/cub/cub2011_dataset" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/cub/pytorch-fgvc-dataset" vcs="Git" />
   </component>
 </project>

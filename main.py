@@ -8,7 +8,7 @@ class Classifier(nn.Module):
 
     def __init__(self):
         super(Classifier, self).__init__()
-        self.conv0 = nn.Conv2d(1, 8, 3, 1)
+        self.conv0 = nn.Conv2d(3, 8, 3, 1)
         self.conv1 = nn.Conv2d(8, 16, 3, 1)
         self.pool = nn.MaxPool2d(2, 2)
         self.conv2 = nn.Conv2d(16, 32, 3, 1)
@@ -21,7 +21,7 @@ class Classifier(nn.Module):
         self.conv5_bn = nn.BatchNorm2d(128)
         self.dropout1 = nn.Dropout2d(0.25)
         self.dropout2 = nn.Dropout2d(0.5)
-        self.fc1 = nn.Linear(36864, 1024)
+        self.fc1 = nn.Linear(3936256, 1024)
         # self.fc1 = nn.Linear(2284800, 1024)
         # self.fc2 = nn.Linear(1024, 256)
         # self.fc3 = nn.Linear(256, 40)

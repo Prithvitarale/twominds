@@ -5,18 +5,24 @@ import torch.optim as optim
 import torch as t
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
+from cub.cub2011_dataset.cub2011 import Cub2011
 
 
 def load_data():
-    transform = transforms.Compose([transforms.ToTensor()]) # transforms.ConvertImageDtype(t.float)
+    transform = transforms.Compose([transforms.ToTensor(),
+                                    transforms.ConvertImageDtype(t.float),
+                                    transforms.Resize([256, 256])])
+    # transforms.ConvertImageDtype(t.float)
     # train_data = datasets.FashionMNIST("./data", download=True, train=True, transform=transform)
     # test_data = datasets.FashionMNIST("./data", download=True, train=False, transform=transform)
     # train_data = datasets.CelebA("./data", download=True, split='train', transform=transform)
     # test_data = datasets.CelebA("./data", download=True, split='test', transform=transform)
-    train_data = datasets.CIFAR10("./data", download=True, train=True, transform=transform)
-    test_data = datasets.CIFAR10("./data", download=True, train=False, transform=transform)
-    train_loader = DataLoader(train_data, batch_size=32, shuffle=True)
-    test_loader = DataLoader(test_data, batch_size=32, shuffle=True)
+    # train_data = datasets.CIFAR10("./data", download=True, train=True, transform=transform)
+    # test_data = datasets.CIFAR10("./data", download=True, train=False, transform=transform)
+    # train_loader = DataLoader(train_data, batch_size=32, shuffle=True)
+    # test_loader = DataLoader(test_data, batch_size=32, shuffle=True)
+    cub_data = Cub2011("data/", train=True, download=False)
+    train_loader, test_loader = cub_data.get_data_loader(transform)
     return train_loader, test_loader
 
 
@@ -67,6 +73,13 @@ def train():
         running_loss += t.sum(t.eq(y_hat, y))
     print(f'Final Test Loss: {running_loss / (i * 32)}')
     t.save(model, "./saved_models/preliminary_faces.pt")
+
+
+cub_data = Cub2011("data/", train=True, download=False)
+cub_data.get_concepts()
+exit()
+
+
 
 print("prints to file")
 train()
