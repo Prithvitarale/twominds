@@ -205,14 +205,10 @@ class Cub2011(Dataset):
         c = y-window_size
         d = y+window_size
         invalid = 0
-        if a < 0:
-            a = 0
-        if c < 0:
-            c = 0
-        if b >= max_x:
-            b = max_x-1
-        if d >= max_y:
-            d = max_y-1
+        a = max(a, 0)
+        c = max(c, 0)
+        b = min(b, max_x-1)
+        d = min(d, max_y-1)
         if a>b:
             temp = a
             a = b
