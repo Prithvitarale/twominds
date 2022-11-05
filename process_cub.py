@@ -9,6 +9,7 @@ import torchvision.transforms as transforms
 import torch as t
 from torch.utils.data import TensorDataset, DataLoader
 import matplotlib.pyplot as plt
+import pickle
 
 
 class Cub2011(Dataset):
@@ -137,28 +138,89 @@ class Cub2011(Dataset):
 
         imager = transforms.ToPILImage()
         window_size = 35
-        a = 1
-        concepts = [[]]*200
+        cond = 2
+        class_concepts = [[] for _ in range(15)]
+        concepts = [[[] for _ in range(15)] for _ in range(201)]
         for file in glob.glob(file_name):
             for img in glob.glob(os.path.join(file, "*")):
                 img_id, class_id = path2id[img]
-                print(img_id)
+                # the problem is here, for each concept id we have multiple concepts,
+                # don't loop through each, find way to aggregate
                 image = Image.open(img)
                 img_tensor = transform(image)
                 parts = part_locs.iloc[15*(img_id-1):15*(img_id)]
-                print(len(parts))
-                plt.imshow(imager(img_tensor))
+                # plt.imshow(imager(img_tensor))
                 for part_id in range(len(parts)):
                     if int(parts.iloc[part_id, 4]) == 1:
                         x, y = int(parts.iloc[part_id, 2]), int(parts.iloc[part_id, 3])
-                        concept = img_tensor[:, x-window_size:x+window_size, y-window_size:y+window_size]
-                        concepts[class_id].append((concept, part_id))
-                        print(part_id+1)
-                for i, concept in enumerate(concepts[class_id]):
-                    c_r, c_id = concept[0], concept[1]
-                    # print(c_r)
-                    concept_img = imager(c_r)
-                    concept_img.save(f'concepts/{class_id}_{c_id+1}.png')
-                a-=1
-                if a==0:
-                    exit()
+                        a, b, c, d, invalid = self.__check_constraints__(img_tensor, x, y, window_size)
+                        # print(a, b, c, d, part_id, class_id)
+                        if invalid==0:
+                            concept = img_tensor[:, a:b, c:d]
+                            try:
+                                if len(concepts[class_id][part_id]) >= 1:
+                                    # print(len(concepts[class_id][part_id]))
+                                    (concept_p, part_id, occurrences, added) = concepts[class_id][part_id][0]
+                                    # print(part_id)
+                                    # print((concept_p, part_id, occurrences, added))
+                                    if concept_p.shape == concept.shape:
+                                        concept = t.divide(t.add(t.multiply(concept_p, added), concept), added+1)
+                                        concepts[class_id][part_id][0] = (concept, part_id, occurrences+1, added+1)
+                                    else:
+                                        concepts[class_id][part_id][0] = (concept_p, part_id, occurrences + 1, added)
+                                    # print(occurrences+1)
+                                else:
+                                    # print(len(concepts[class_id][part_id]))
+                                    concepts[class_id][part_id].append((concept, part_id, 1, 1))
+                                # print(concepts[class_id][part_id][:][2])
+                            except:
+                                print("extraction loop")
+                # print(len(concepts[class_id]))
+                for part_id_loop in range(len(parts)):
+                    # print(len(concepts[class_id][part_id_loop]))
+                    try:
+                        if len(concepts[class_id][part_id_loop]) >= 1:
+                            c_r, c_id, o, a = concepts[class_id][part_id_loop][0]
+                            # print(o)
+                            try:
+                                concept_img = imager(c_r)
+                            except:
+                                print(c_r.shape)
+                    except:
+                        print("imaging loop")
+                    # print(c_r.shape, c_id, class_id)
+                    # concept_img.save(f'concepts/{class_id}_{c_id+1}.png')
+                # cond-=1
+                # if cond==0:
+                #     exit()
+
+        with open("concepts/concepts.pkl", "wb") as fp:
+            pickle.dump(concepts, fp)
+
+    def __check_constraints__(self, img, x, y, window_size):
+        max_x = img.shape[1]
+        max_y = img.shape[2]
+        a = x-window_size
+        b = x+window_size
+        c = y-window_size
+        d = y+window_size
+        invalid = 0
+        if a < 0:
+            a = 0
+        if c < 0:
+            c = 0
+        if b >= max_x:
+            b = max_x-1
+        if d >= max_y:
+            d = max_y-1
+        if a>b:
+            temp = a
+            a = b
+            b = temp
+        if c>d:
+            temp = c
+            c = d
+            d = temp
+        if a==b or c==d:
+            invalid=1
+        return a, b, c, d, invalid

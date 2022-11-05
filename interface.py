@@ -4,9 +4,8 @@ import torch.nn.functional as F
 import torch.optim as optim
 import torch as t
 from torchvision import datasets, transforms
-from torch.utils.data import DataLoader
-# from cub.cub2011_dataset.cub2011 import Cub2011
 from process_cub import Cub2011
+import pickle
 
 def load_data():
     transform = transforms.Compose([transforms.ToTensor(),
@@ -75,9 +74,15 @@ def train():
     t.save(model, "./saved_models/preliminary_faces.pt")
 
 
-# cub_data = Cub2011("data/", train=True, download=False)
-# cub_data.get_concepts()
+# with open("concepts/concepts.pkl", "rb") as fp:
+#     concepts = pickle.load(fp)
+# print(concepts[2][4])
 # exit()
+
+
+cub_data = Cub2011("data/", train=True, download=False)
+cub_data.get_concepts()
+exit()
 
 
 
