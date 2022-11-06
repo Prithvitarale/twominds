@@ -22,6 +22,7 @@ def load_data():
     # test_loader = DataLoader(test_data, batch_size=32, shuffle=True)
     cub_data = Cub2011("data/", train=True, download=False)
     train_loader, test_loader = cub_data.get_data_loader(transform)
+    print(train_loader, test_loader)
     return train_loader, test_loader
 
 
@@ -39,12 +40,19 @@ def train():
         print(f"Epoch: {epoch}")
         for i, data in enumerate(train_loader, 0):
             x, y = data
+            print(x[0])
             print(y[0])
-
+            print(len(x))
+            print(len(y))
+            # exit()
             optimizer.zero_grad()
-
+            print("1")
             y_hat = model(x)
+            print("2")
+
             loss = loss_calc(y_hat, y)
+            print("3")
+
             # print(loss.item())
             loss.backward()
             optimizer.step()
@@ -79,18 +87,17 @@ def train():
 # print(concepts[2][4])
 # exit()
 
-
-cub_data = Cub2011("data/", train=True, download=False)
-cub_data.get_concepts()
-exit()
-
-
-
-print("prints to file")
+#
+# cub_data = Cub2011("data/", train=True, download=False)
+# cub_data.get_concepts()
+# exit()
+#
+#
+#
 train()
 exit()
-model = t.load("./saved_models/preliminary_cifar10.pt")
-model.eval()
+# model = t.load("./saved_models/preliminary_cifar10.pt")
+# model.eval()
 
 
 td, ted = load_data()

@@ -21,6 +21,7 @@ class MetaGraph(nx.Graph):
         # self.concept_vertices = t.ones((no_of_concepts, respresentation_size, respresentation_size))
         self.cos = nn.CosineSimilarity(dim=1, eps=1e-6)
         self.meta_vertex_representations = t.ones((self.meta_vertex_id, respresentation_size, respresentation_size))
+        self.edges_across_mv = []
 
     def add_vertex(self, nodes_representations):
         for node in nodes_representations:
@@ -34,7 +35,7 @@ class MetaGraph(nx.Graph):
         self.meta_vertices.append(nx.Graph())
         self.mg.add_node(self.meta_vertex_id)
 
-    def add_edge(self):
+    def add_edge(self,  node_a, node_b):
         pass
 
     def add_meta_edge(self, node_a, node_b):
