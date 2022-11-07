@@ -82,20 +82,24 @@ def train():
     t.save(model, "./saved_models/preliminary_faces.pt")
 
 
-# with open("concepts/concepts.pkl", "rb") as fp:
-#     concepts = pickle.load(fp)
-# print(concepts[2][4])
-# exit()
+with open("concepts/concepts.pkl", "rb") as fp:
+    concepts = pickle.load(fp)
+
+with open("concepts/visibility.pkl", "rb") as fp2:
+    visibility = pickle.load(fp2)
+print(concepts[2][4])
+print(visibility[2][3])
+exit()
 
 #
-# cub_data = Cub2011("data/", train=True, download=False)
+# cub_data = Cub2011("data/")
 # cub_data.get_concepts()
 # exit()
 #
 #
 #
-train()
-exit()
+# train()
+# exit()
 # model = t.load("./saved_models/preliminary_cifar10.pt")
 # model.eval()
 
